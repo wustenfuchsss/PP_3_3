@@ -23,12 +23,10 @@ public class UserService implements UserDetailsService {
     @PersistenceContext
     private EntityManager em;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     @Autowired
     public UserService(EntityManager em, UserRepository userRepository, RoleRepository roleRepository) {
         this.em = em;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
 
     @Override
