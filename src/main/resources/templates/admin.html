@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Users</title>
+    <style>table th, table td {
+        padding: 40px;
+    }</style>
+</head>
+
+<body>
+<form action="/logout" target="_blank">
+    <p style="margin-left:1080px;"><button>Log out</button></p>
+</form>
+
+<form th:method="POST" th:action="@{/new}" th:object="${user}">
+    <label for="username">Username: </label>
+    <input type="text" th:field="*{username}" id="username">
+    <br/>
+    <label for="password">Password: </label>
+    <input type="text" th:field="*{password}" id="password">
+    <br/>
+    <label for="email">Email: </label>
+    <input type="text" th:field="*{email}" id="email">
+    <br/>
+    <label for="age">Age: </label>
+    <input type="text" th:field="*{age}" id="age">
+    <br/>
+    <input type="submit" value="Save">
+</form>
+
+
+<p>&nbsp;</p>
+<div align="center">
+    <h1>Users</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Age</th>
+            <th>Action</th>
+        </tr>
+
+        <tr th:each="user : ${listUser}">
+            <td th:utext="${user.id}">ID</td>
+            <td th:utext="${user.email}">email</td>
+            <td th:utext="${user.username}">username</td>
+            <td th:utext="${user.age}">age</td>
+            <td>
+                <form method="post" th:action="@{/delete}">
+                    <button type="submit" th:name="id" th:value="${user.id}">Delete</button>
+                </form>
+                <form th:action="@{/edit}">
+                    <button type="submit" th:name="id" th:value="${user.id}">Edit</button>
+                </form>
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+</body>
+
+</html>
