@@ -16,28 +16,40 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
-    @NotEmpty
-    @Size(min = 2, max = 15)
+//    @NotEmpty
+//    @Size(min = 2, max = 30)
     private String username;
 
     @Column
-    @NotEmpty
-    @Email
+//    @NotEmpty
+//    @Email
     private String email;
     @Column
-    @Max(100)
-    @Min(14)
+//    @Max(110)
+//    @Min(10)
     private int age;
 
     @Column
-    @NotEmpty
-    @Size(min = 8)
+//    @NotEmpty
+//    @Size(min = 4)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    public User(String username, String email, int age, String password, Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.age = age;
+        this.password = password;
+        this.roles = roles;
+    }
+
     public User() {
+    }
+    public String rolesToString() {
+        String rts = roles.toString();
+        return rts.substring(1, rts.length()-1);
     }
 
     @Override
@@ -98,7 +110,6 @@ public class User implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
     public String getEmail() {
         return email;
     }

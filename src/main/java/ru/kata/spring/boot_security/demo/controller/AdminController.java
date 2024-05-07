@@ -11,33 +11,42 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
+import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Controller
 public class AdminController {
     private final UserService userService;
 
+    private final RoleRepository roleRepository;
+
     private final Logger logger = Logger.getLogger(AdminController.class.getName());
 
     @Autowired
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
+        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/admin")
     public ModelAndView adminPage() {
         ModelAndView mav = new ModelAndView("admin");
         try {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             List<User> users = userService.allUsers();
             mav.addObject("listUser", users);
             mav.addObject(new User());
+            mav.addObject("curUser", user);
+            mav.addObject("newUser",new User());
+            mav.addObject("adminRole");
+            mav.addObject("userRole", Collections.singleton(new Role(1L, "ROLE_USER")));
             logger.info("Загружена страница администратора");
         } catch (Exception e) {
             logger.warning("Ошбибка" + Arrays.toString(e.getStackTrace()));
@@ -83,11 +92,9 @@ public class AdminController {
     }
 
     @PostMapping("/new")
-    public String saveUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String saveUser(@ModelAttribute("user") User user) {
         try {
-            if (!bindingResult.hasErrors()) {
-                userService.saveUser(user);
-            }
+            userService.saveUser(user);
             logger.info("Пользователь " + user.getUsername() + " добавлен");
         } catch (Exception e) {
             logger.warning("Ошибка: " + Arrays.toString(e.getStackTrace()));
