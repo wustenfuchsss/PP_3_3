@@ -6,16 +6,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import ru.kata.spring.boot_security.demo.entity.Role;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -24,7 +21,7 @@ public class UserService implements UserDetailsService {
     private EntityManager em;
     private final UserRepository userRepository;
     @Autowired
-    public UserService(EntityManager em, UserRepository userRepository, RoleRepository roleRepository) {
+    public UserService(EntityManager em, UserRepository userRepository) {
         this.em = em;
         this.userRepository = userRepository;
     }
@@ -52,6 +49,20 @@ public class UserService implements UserDetailsService {
         if (userFromDB != null) {
             return;
         }
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(new Role(1L, "ROLE_USER"));
+        user.setRoles(roleSet);
+        userRepository.save(user);
+    }
+    public void saveAdminUser(User user) {
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+        if (userFromDB != null) {
+            return;
+        }
+        Set<Role> roleSet = new HashSet<>();
+        roleSet.add(new Role(1L, "ROLE_USER"));
+        roleSet.add(new Role(0L, "ROLE_ADMIN"));
+        user.setRoles(roleSet);
         userRepository.save(user);
     }
     public void deleteUser(Long userId) {

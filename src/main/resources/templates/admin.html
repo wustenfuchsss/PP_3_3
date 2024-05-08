@@ -17,7 +17,7 @@
 
     </a>
     <form style="margin-top: -5px" method="post" th:action="@{/logout}">
-        <button type="button" class="btn btn-link" style="color: gray">Logout</button>
+        <button type="submit" class="btn btn-link" style="color: gray">Logout</button>
     </form>
 </nav>
 
@@ -73,18 +73,148 @@
                                     <td th:utext="${user.age}">age</td>
                                     <td th:utext="${user.rolesToString()}">roles</td>
                                     <td>
-                                        <form th:action="@{/edit}">
-                                            <button type="button" class="btn btn-primary"
-                                                    style="background-color: #2eaebf" th:name="id"
-                                                    th:value="${user.id}">Edit
-                                            </button>
+                                        <button style="background-color: #22bec9" type="button" class="btn btn-primary" data-toggle="modal"
+                                                th:attr="data-target='#editUserModal-'+${user.id}">Edit
+                                        </button>
+                                        <form th:action="@{/admin/{id}(id=${user.id})}"
+                                              th:method="post">
+                                            <div class="modal fade" th:id="'editUserModal-'+${user.id}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'editUserModal-'+${user.id}">Modal title</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <fieldset style="width: 400px; margin-left: 36px">
+                                                                <div class="form-group">
+                                                                    <label for="user-id"
+                                                                           style="font-weight: bold">ID</label>
+                                                                    <input disabled type="text" id="user-id"
+                                                                           class="form-control"
+                                                                           th:value="${user.id}" name="id">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="user-name"
+                                                                           style="font-weight: bold">Username</label>
+                                                                    <input type="text" id="user-name"
+                                                                           class="form-control"
+                                                                           th:value="${user.username}" name="username">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="user-password"
+                                                                           style="font-weight: bold">Password</label>
+                                                                    <input type="text" id="user-password"
+                                                                           class="form-control" th:value="${user.password}" name="password">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="user-email"
+                                                                           style="font-weight: bold">Email</label>
+                                                                    <input type="text" id="user-email"
+                                                                           class="form-control"
+                                                                           th:value="${user.email}" name="email">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="user-age"
+                                                                           style="font-weight: bold">Age</label>
+                                                                    <input type="text" id="user-age"
+                                                                           class="form-control"
+                                                                           th:value="${user.age}" name="age">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="ed_role"
+                                                                           style="font-weight: bold; margin-left: 176px">Role</label>
+                                                                    <select name="role" id="ed_role"
+                                                                            class="form-control">
+                                                                        <option value="user">USER</option>
+                                                                        <option value="admin">ADMIN</option>
+                                                                    </select>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </form>
+
                                     </td>
                                     <td>
-                                        <form method="post" th:action="@{/delete}">
-                                            <button type="button" class="btn btn-danger" th:name="id"
-                                                    th:value="${user.id}">Delete
-                                            </button>
+                                        <button style="background-color: #c92222" type="button" class="btn btn-primary" data-toggle="modal"
+                                                th:attr="data-target='#deleteUserModal-'+${user.id}">Delete
+                                        </button>
+                                        <form th:action="@{/delete/{id}(id=${user.id})}"
+                                              th:method="post">
+                                            <div class="modal fade" th:id="'deleteUserModal-'+${user.id}" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" th:id="'deleteUserModal-'+${user.id}">Modal title</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <fieldset style="width: 400px; margin-left: 36px" disabled>
+                                                                <div class="form-group">
+                                                                    <label for="de_user-id"
+                                                                           style="font-weight: bold">ID</label>
+                                                                    <input disabled type="text" id="de_user-id"
+                                                                           class="form-control"
+                                                                           th:value="${user.id}" name="id">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="de_user-name"
+                                                                           style="font-weight: bold">Username</label>
+                                                                    <input type="text" id="de_user-name"
+                                                                           class="form-control"
+                                                                           th:value="${user.username}" name="username">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="de_user-password"
+                                                                           style="font-weight: bold">Password</label>
+                                                                    <input type="text" id="de_user-password"
+                                                                           class="form-control" th:value="${user.password}" name="password">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="de_user-email"
+                                                                           style="font-weight: bold">Email</label>
+                                                                    <input type="text" id="de_user-email"
+                                                                           class="form-control"
+                                                                           th:value="${user.email}" name="email">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="de_user-age"
+                                                                           style="font-weight: bold">Age</label>
+                                                                    <input type="text" id="de_user-age"
+                                                                           class="form-control"
+                                                                           th:value="${user.age}" name="age">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="de_role"
+                                                                           style="font-weight: bold; margin-left: 176px">Role</label>
+                                                                    <select name="role" id="de_role"
+                                                                            class="form-control">
+                                                                        <option value="user">USER</option>
+                                                                        <option value="admin">ADMIN</option>
+                                                                    </select>
+                                                                </div>
+                                                            </fieldset>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button style="background-color: #c92222" type="submit" class="btn btn-primary">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                         </form>
                                     </td>
                                 </tr>
@@ -102,8 +232,8 @@
                                  style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
                                 <a class="navbar-brand">Add new user</a>
                             </nav>
-                            <form>
-                                <fieldset style="width: 400px; margin: 20px 330px" th:method="POST" th:action="@{/new}"
+                            <form th:method="POST" th:action="@{/new}">
+                                <fieldset style="width: 400px; margin: 20px 330px"
                                           th:object="${newUser}">
                                     <div class="form-group">
                                         <label for="username"
@@ -126,9 +256,9 @@
                                     <div class="form-group">
                                         <label for="disabledSelect"
                                                style="font-weight: bold; margin-left: 176px">Role</label>
-                                        <select th:field="*{roles}" id="disabledSelect" class="form-control">
-                                            <option th:value="${userRole}">USER</option>
-                                            <option th:value="${adminRole}">ADMIN</option>
+                                        <select name="role" id="disabledSelect" class="form-control">
+                                            <option value="user">USER</option>
+                                            <option value="admin">ADMIN</option>
                                         </select>
                                     </div>
                                     <button type="submit" style="background-color: green; margin-left: 129px"
@@ -136,7 +266,6 @@
                                     </button>
                                 </fieldset>
                             </form>
-
                         </div>
 
                     </div>
@@ -155,7 +284,6 @@
                      style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
                     <a class="navbar-brand">About User</a>
                 </nav>
-
                 <table class="table table-stripped"
                        style="background-color: white; width: 1050px; margin: 25px 14px">
                     <thead>

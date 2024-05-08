@@ -16,22 +16,22 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
-//    @NotEmpty
-//    @Size(min = 2, max = 30)
+    @NotEmpty
+    @Size(min = 2, max = 30)
     private String username;
 
     @Column
-//    @NotEmpty
-//    @Email
+    @NotEmpty
+    @Email
     private String email;
     @Column
-//    @Max(110)
-//    @Min(10)
+    @Max(110)
+    @Min(10)
     private int age;
 
     @Column
-//    @NotEmpty
-//    @Size(min = 4)
+    @NotEmpty
+    @Size(min = 4)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)

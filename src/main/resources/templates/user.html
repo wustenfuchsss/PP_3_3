@@ -17,7 +17,7 @@
 
     </a>
     <form style="margin-top: -5px" method="post" th:action="@{/logout}">
-        <button type="button" class="btn btn-link" style="color: gray">Logout</button>
+        <button type="submit" class="btn btn-link" style="color: gray">Logout</button>
     </form>
 </nav>
 
@@ -25,124 +25,42 @@
 <div class="container position-absolute" style="margin: 20px -15px; width: 280px;">
 
     <ul class="nav nav-pills flex-column">
-        <li><a class="nav-link active" href="#admin" data-toggle="tab">Admin</a></li>
-        <li><a class="nav-link" href="#user" data-toggle="tab">User</a></li>
+        <li><a class="nav-link active" href="#user" data-toggle="tab">User</a></li>
     </ul>
 
-    <div class="tab-content" style="margin: -100px 250px">
-        <!-- Контент для ссылок -->
-        <div class="tab-pane show active position-absolute"
-             style="background-color: #f2f2f2; width: 1185px; height: 750px" id="admin">
-            <h1 style="font-size: 45px; margin: 15px 38px">Admin panel</h1>
-            <!--            НАЧАЛО ВНУТРЕННЕГО НАВБАРА-->
-            <div class="container">
-
-                <ul class="nav nav-tabs">
-                    <li><a class="nav-link active" href="#users" data-toggle="tab">Users table</a></li>
-                    <li><a class="nav-link" href="#new" data-toggle="tab">New User</a></li>
-                </ul>
-
-                <div class="tab-content">
-                    <!-- Контент для ВНУТРЕННЕГО БАРА -->
-                    <div class="tab-pane show active position-absolute" id="users">
-                        <div class="container"
-                             style="width: 1110px; background-color: white; border-color: black; border-width: 0.5px;border-style: outset">
-                            <nav class="navbar"
-                                 style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
-                                <a class="navbar-brand">All users</a>
-                            </nav>
-
-                            <table class="table table-stripped"
-                                   style="background-color: white; width: 1050px; margin: 25px 14px">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Email</th>
-                                    <th>Username</th>
-                                    <th>Age</th>
-                                    <th>Role</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="user : ${listUser}">
-                                    <td th:utext="${user.id}">ID</td>
-                                    <td th:utext="${user.email}">email</td>
-                                    <td th:utext="${user.username}">username</td>
-                                    <td th:utext="${user.age}">age</td>
-                                    <td th:utext="${user.rolesToString()}">roles</td>
-                                    <td>
-                                        <form th:action="@{/edit}">
-                                            <button type="button" class="btn btn-primary"
-                                                    style="background-color: #2eaebf" th:name="id"
-                                                    th:value="${user.id}">Edit
-                                            </button>
-                                        </form>
-                                    </td>
-                                    <td>
-                                        <form method="post" th:action="@{/delete}">
-                                            <button type="button" class="btn btn-danger" th:name="id"
-                                                    th:value="${user.id}">Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-
-                    </div>
-
-                    <div class="tab-pane position-absolute" id="new">
-                        <div class="container"
-                             style="width: 1110px; background-color: white; border-color: black; border-width: 0.5px; border-style: solid">
-                            <nav class="navbar"
-                                 style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
-                                <a class="navbar-brand">Add new user</a>
-                            </nav>
-                            <form>
-                                <fieldset style="width: 400px; margin: 20px 330px" th:method="POST" th:action="@{/new}" th:object="${user}">
-                                    <div class="form-group">
-                                        <label for="username" style="font-weight: bold; margin-left: 150px">Username</label>
-                                        <input type="text" id="username" class="form-control" th:field="*{username}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password" style="font-weight: bold; margin-left: 154px">Password</label>
-                                        <input type="text" id="password" class="form-control" th:field="*{password}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email" style="font-weight: bold; margin-left: 170px">Email</label>
-                                        <input type="text" id="email" class="form-control" th:field="*{email}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="age" style="font-weight: bold; margin-left: 177px">Age</label>
-                                        <input type="text" id="age" class="form-control" th:field="*{age}">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="disabledSelect" style="font-weight: bold; margin-left: 176px">Role</label>
-                                        <select th:field="*{roles}" id="disabledSelect" class="form-control">
-                                            <option th:value="${}">USER</option>
-                                            <option th:value="${}">ADMIN</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" style="background-color: green; margin-left: 129px" class="btn btn-primary">Add new user</button>
-                                </fieldset>
-                            </form>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-            <!--            КОНЕЦ ВНУТРЕНЕГО НАВБАРА-->
-        </div>
-
-        <div class="tab-pane position-absolute" style="background-color: #f2f2f2; width: 1185px; height: 750px"
+    <div class="tab-content" style="margin: -60px 250px">
+        <div class="tab-pane show active position-absolute" style="background-color: #f2f2f2; width: 1185px; height: 750px"
              id="user">
-            <!-- Контент для ссылки 2 -->
             <h1 style="margin: 15px 38px">User information-page</h1>
+            <div class="container"
+                 style="width: 1110px; background-color: white; border-color: black; border-width: 0.5px;border-style: outset">
+                <nav class="navbar"
+                     style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
+                    <a class="navbar-brand">About User</a>
+                </nav>
+                <table class="table table-stripped"
+                       style="background-color: white; width: 1050px; margin: 25px 14px">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Age</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="curUser : ${curUser}">
+                        <td th:utext="${curUser.id}">ID</td>
+                        <td th:utext="${curUser.email}">email</td>
+                        <td th:utext="${curUser.username}">username</td>
+                        <td th:utext="${curUser.age}">age</td>
+                        <td th:utext="${curUser.rolesToString()}">roles</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
         </div>
     </div>
 </div>

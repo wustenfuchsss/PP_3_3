@@ -4,16 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.kata.spring.boot_security.demo.entity.Role;
 import ru.kata.spring.boot_security.demo.entity.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,14 +20,12 @@ import java.util.logging.Logger;
 public class AdminController {
     private final UserService userService;
 
-    private final RoleRepository roleRepository;
 
     private final Logger logger = Logger.getLogger(AdminController.class.getName());
 
     @Autowired
-    public AdminController(UserService userService, RoleRepository roleRepository) {
+    public AdminController(UserService userService) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
     }
 
     @GetMapping("/admin")
@@ -42,11 +35,8 @@ public class AdminController {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             List<User> users = userService.allUsers();
             mav.addObject("listUser", users);
-            mav.addObject(new User());
             mav.addObject("curUser", user);
-            mav.addObject("newUser",new User());
-            mav.addObject("adminRole");
-            mav.addObject("userRole", Collections.singleton(new Role(1L, "ROLE_USER")));
+            mav.addObject("newUser", new User());
             logger.info("Загружена страница администратора");
         } catch (Exception e) {
             logger.warning("Ошбибка" + Arrays.toString(e.getStackTrace()));
@@ -54,34 +44,19 @@ public class AdminController {
         return mav;
     }
 
-    @PostMapping("/delete")
-    public String delete(@RequestParam("id") Long id, Model model) {
-        try {
-            userService.deleteUser(id);
-            logger.info("Пользователь удален");
-        } catch (Exception e) {
-            logger.warning("Ошбибка" + Arrays.toString(e.getStackTrace()));
-        }
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/edit")
-    public String editUserFrom(@RequestParam("id") Long id, Model model) {
-        try {
-            User user = userService.findUserById(id);
-            model.addAttribute("user", user);
-            logger.info("Страница изменения пользователя");
-        } catch (Exception e) {
-            logger.warning("Ошбибка" + Arrays.toString(e.getStackTrace()));
-        }
-        return "edit";
-    }
-
-    @PostMapping("/edit")
-    public String edit(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    @PostMapping("/admin/{id}")
+    public String saveEdit(@PathVariable(name = "id") Long id, @ModelAttribute("user") @Valid User user, String role, BindingResult bindingResult) {
         try {
             if (bindingResult.hasErrors()) {
-                return "redirect:/edit";
+                return "redirect:/admin";
+            }
+            if (role.equals("user")) {
+                user.setRoles(Collections.singleton(new Role(1L, "ROLE_USER")));
+            } else if (role.equals("admin")) {
+                Set<Role> roleSet = new HashSet<>();
+                roleSet.add(new Role(1L, "ROLE_USER"));
+                roleSet.add(new Role(0L, "ROLE_ADMIN"));
+                user.setRoles(roleSet);
             }
             userService.updateUser(user);
             logger.info("Пользователь обновлен");
@@ -90,12 +65,30 @@ public class AdminController {
         }
         return "redirect:/admin";
     }
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable(name = "id") Long id, @ModelAttribute("user") @Valid User user, String role, BindingResult bindingResult) {
+        try {
+            if (bindingResult.hasErrors()) {
+                return "redirect:/admin";
+            }
+            userService.deleteUser(user.getId());
+            logger.info("Пользователь удален");
+        } catch (Exception e) {
+            logger.warning("Ошбибка" + Arrays.toString(e.getStackTrace()));
+        }
+        return "redirect:/admin";
+    }
 
     @PostMapping("/new")
-    public String saveUser(@ModelAttribute("user") User user) {
+    public String saveUser(@ModelAttribute("user") @Valid User user, @RequestParam("role") String role) {
         try {
-            userService.saveUser(user);
-            logger.info("Пользователь " + user.getUsername() + " добавлен");
+            if (role.equals("user")) {
+                userService.saveUser(user);
+                logger.info("Пользователь " + user.getUsername() + " добавлен");
+            } else if (role.equals("admin")) {
+                userService.saveAdminUser(user);
+                logger.info("Пользователь с правами админа " + user.getUsername() + " добавлен");
+            }
         } catch (Exception e) {
             logger.warning("Ошибка: " + Arrays.toString(e.getStackTrace()));
         }

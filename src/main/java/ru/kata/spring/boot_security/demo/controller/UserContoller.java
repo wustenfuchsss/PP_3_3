@@ -20,7 +20,7 @@ public class UserContoller {
         try {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             modelAndView.setViewName("user");
-            modelAndView.addObject("user", user);
+            modelAndView.addObject("curUser", user);
             logger.info("Загружена страница пользователя");
         } catch (Exception e) {
             logger.warning("Ошбибка" + Arrays.toString(e.getStackTrace()));
