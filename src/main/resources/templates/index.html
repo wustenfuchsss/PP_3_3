@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:form="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>Users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body style="background-color: #f8f9fa;">
+
+<nav class="navbar navbar-dark bg-dark" style="height: 50px">
+    <a class="navbar-brand ml-5" style="margin: -10px">
+        <span id="currentUserUsername" style="font-weight: bold;font-size: 18px"></span> with roles:
+        <span id="currentUserRoles" style="font-weight: bold;font-size: 18px"></span>
+
+    </a>
+    <form style="margin-top: -5px" method="post" th:action="@{/logout}">
+        <button type="submit" class="btn btn-link" style="color: gray">Logout</button>
+    </form>
+</nav>
+
+
+<div class="container position-absolute" style="margin: 20px -15px; width: 280px;">
+
+    <ul class="nav nav-pills flex-column">
+        <li><a class="nav-link active" href="#admin" data-toggle="tab" id="adminTab">Admin</a></li>
+        <li><a class="nav-link" href="#user" data-toggle="tab" id="userTab" >User</a></li>
+    </ul>
+
+    <div class="tab-content" style="margin: -100px 250px">
+        <!-- Контент для ссылок -->
+        <div class="tab-pane show active position-absolute"
+             style="background-color: #f2f2f2; width: 1185px; height: 750px" id="admin">
+            <h1 style="font-size: 45px; margin: 15px 38px">Admin panel</h1>
+            <!--            НАЧАЛО ВНУТРЕННЕГО НАВБАРА-->
+            <div class="container">
+
+                <ul class="nav nav-tabs">
+                    <li><a class="nav-link active" href="#users" data-toggle="tab">Users table</a></li>
+                    <li><a class="nav-link" href="#new" data-toggle="tab">New User</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <!-- Контент для ВНУТРЕННЕГО БАРА -->
+                    <div class="tab-pane show active position-absolute" id="users">
+                        <div class="container"
+                             style="width: 1110px; background-color: white; border-color: black; border-width: 0.5px;border-style: outset">
+                            <nav class="navbar"
+                                 style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
+                                <a class="navbar-brand">All users</a>
+                            </nav>
+
+                            <table class="table table-stripped"
+                                   style="background-color: white; width: 1050px; margin: 25px 14px"
+                                   id="mainTableWithUsers">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Username</th>
+                                    <th>Age</th>
+                                    <th>Role</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane position-absolute" id="new">
+                        <div class="container"
+                             style="width: 1110px; background-color: white; border-color: black; border-width: 0.5px; border-style: solid">
+                            <nav class="navbar"
+                                 style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
+                                <a class="navbar-brand">Add new user</a>
+                            </nav>
+                            <form id="user-form">
+                                <fieldset style="width: 400px; margin: 20px 330px">
+                                    <div class="form-group">
+                                        <label for="username"
+                                               style="font-weight: bold; margin-left: 150px">Username</label>
+                                        <input type="text" id="username" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password"
+                                               style="font-weight: bold; margin-left: 154px">Password</label>
+                                        <input type="text" id="password" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="email" style="font-weight: bold; margin-left: 170px">Email</label>
+                                        <input type="text" id="email" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age" style="font-weight: bold; margin-left: 177px">Age</label>
+                                        <input type="text" id="age" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="roles"
+                                               style="font-weight: bold; margin-left: 176px">Role</label>
+                                        <select name="role" id="roles" class="form-control">
+                                            <option value="USER">USER</option>
+                                            <option value="ADMIN">ADMIN</option>
+                                        </select>
+                                    </div>
+                                    <button id="new-user-btn" type="submit"
+                                            style="background-color: green; margin-left: 129px"
+                                            class="btn btn-primary">Add new user
+                                    </button>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--            КОНЕЦ ВНУТРЕНЕГО НАВБАРА-->
+        </div>
+
+        <div class="tab-pane position-absolute" style="background-color: #f2f2f2; width: 1185px; height: 750px"
+             id="user">
+            <!-- Контент для ссылки 2 -->
+            <h1 style="margin: 15px 38px">User information-page</h1>
+            <div class="container"
+                 style="width: 1110px; background-color: white; border-color: black; border-width: 0.5px;border-style: outset">
+                <nav class="navbar"
+                     style="margin-left: -15px; border-bottom-style: outset; border-width: 1px; background-color: #f2f0f0; width: 1109px">
+                    <a class="navbar-brand">About User</a>
+                </nav>
+                <table id="userInfo" class="table table-stripped"
+                       style="background-color: white; width: 1050px; margin: 25px 14px">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Email</th>
+                        <th>Username</th>
+                        <th>Age</th>
+                        <th>Role</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="userModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <fieldset id="fieldset" style="width: 400px; margin-left: 36px">
+                        <div class="form-group">
+                            <label for="user-id" style="font-weight: bold">ID</label>
+                            <input disabled type="text" id="user-id" class="form-control" name="id">
+                        </div>
+                        <div class="form-group">
+                            <label for="user-email" style="font-weight: bold">Email</label>
+                            <input type="text" id="user-email" class="form-control" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="user-name" style="font-weight: bold">Username</label>
+                            <input type="text" id="user-name" class="form-control" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="user-age" style="font-weight: bold">Age</label>
+                            <input type="text" id="user-age" class="form-control" name="age">
+                        </div>
+                        <div class="form-group">
+                            <label for="user-password" style="font-weight: bold">Password</label>
+                            <input type="text" id="user-password" class="form-control" name="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="ed_role" style="font-weight: bold; margin-left: 176px">Role</label>
+                            <select name="role" id="ed_role" class="form-control">
+                                <option value="user">USER</option>
+                                <option value="admin">ADMIN</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="saveChangesButton" type="submit" data-dismiss="modal" class="btn btn-primary">Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>
